@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import os
+import pathlib
 import random
 import shlex
 import subprocess
 
 import gradio as gr
 import torch
+from huggingface_hub import snapshot_download
 
 if os.getenv('SYSTEM') == 'spaces':
     subprocess.run(shlex.split('pip uninstall -y modelscope'))
@@ -20,11 +22,18 @@ if os.getenv('SYSTEM') == 'spaces':
 from modelscope.outputs import OutputKeys
 from modelscope.pipelines import pipeline
 
+model_dir = pathlib.Path('weights')
+if not model_dir.exists():
+    model_dir.mkdir()
+    snapshot_download('hysts/modelscope-damo-text-to-video-synthesis',
+                      repo_type='model',
+                      local_dir=model_dir)
+
 DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
 if (SPACE_ID := os.getenv('SPACE_ID')) is not None:
     DESCRIPTION += f'\n<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings. <a href="https://huggingface.co/spaces/{SPACE_ID}?duplicate=true"><img style="display: inline; margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space" /></a></p>'
 
-pipe = pipeline('text-to-video-synthesis', 'damo/text-to-video-synthesis')
+pipe = pipeline('text-to-video-synthesis', model_dir.as_posix())
 
 
 def generate(prompt: str, seed: int) -> str:
