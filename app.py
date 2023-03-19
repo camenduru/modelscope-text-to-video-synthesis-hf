@@ -25,7 +25,7 @@ from modelscope.pipelines import pipeline
 model_dir = pathlib.Path('weights')
 if not model_dir.exists():
     model_dir.mkdir()
-    snapshot_download('hysts/modelscope-damo-text-to-video-synthesis',
+    snapshot_download('damo-vilab/modelscope-damo-text-to-video-synthesis',
                       repo_type='model',
                       local_dir=model_dir)
 
