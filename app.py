@@ -75,4 +75,4 @@ with gr.Blocks(css='style.css') as demo:
     prompt.submit(fn=generate, inputs=inputs, outputs=result)
     run_button.click(fn=generate, inputs=inputs, outputs=result)
 
-demo.queue(api_open=False).launch()
+demo.queue(api_open=False, max_size=15).launch()
