@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import random
 import shlex
 import subprocess
 
@@ -27,6 +28,8 @@ pipe = pipeline('text-to-video-synthesis', 'damo/text-to-video-synthesis')
 
 
 def generate(prompt: str, seed: int) -> str:
+    if seed == -1:
+        seed = random.randint(0, 1000000)
     torch.manual_seed(seed)
     return pipe({'text': prompt})[OutputKeys.OUTPUT_VIDEO]
 
