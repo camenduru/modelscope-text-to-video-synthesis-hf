@@ -1,0 +1,5 @@
+decord==0.6.0
+fairseq==0.12.2
+gradio==3.22.1
+modelscope[multi-modal]==1.4.1
+open_clip_torch==2.16.0
