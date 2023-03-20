@@ -51,9 +51,19 @@ examples = [
 
 with gr.Blocks(css='style.css') as demo:
     gr.Markdown(DESCRIPTION)
-    with gr.Row():
-        with gr.Column():
-            prompt = gr.Text(label='Prompt', max_lines=1)
+    with gr.Group():
+        with gr.Box():
+            with gr.Row(elem_id='prompt-container').style(equal_height=True):
+                prompt = gr.Text(
+                    label='Prompt',
+                    show_label=False,
+                    max_lines=1,
+                    placeholder='Enter your prompt',
+                    elem_id='prompt-text-input').style(container=False)
+                run_button = gr.Button('Generate video').style(
+                    full_width=False)
+        result = gr.Video(label='Result', show_label=False, elem_id='gallery')
+        with gr.Accordion('Advanced options', open=False):
             seed = gr.Slider(
                 label='Seed',
                 minimum=-1,
@@ -61,9 +71,6 @@ with gr.Blocks(css='style.css') as demo:
                 step=1,
                 value=-1,
                 info='If set to -1, a different seed will be used each time.')
-            run_button = gr.Button('Run')
-        with gr.Column():
-            result = gr.Video(label='Result')
 
     inputs = [prompt, seed]
     gr.Examples(examples=examples,
