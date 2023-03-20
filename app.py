@@ -75,4 +75,21 @@ with gr.Blocks(css='style.css') as demo:
     prompt.submit(fn=generate, inputs=inputs, outputs=result)
     run_button.click(fn=generate, inputs=inputs, outputs=result)
 
+    with gr.Accordion(label="Biases and content acknowledgment", open=False):
+            gr.HTML(
+                """<div class="acknowledgments">
+                    <h4>Biases and content acknowledgment</h4>
+                    <p>
+                        Despite how impressive being able to turn text into video is, beware to the fact that this model may output content that reinforces or exacerbates societal biases. The training data includes LAION5B, ImageNet, Webvid and other public datasets. The model was not trained to realistically represent people or events, so using it to generate such content is beyond the model's capabilities.
+                    </p>
+                    <p>
+                        It is not intended to generate content that is demeaning or harmful to people or their environment, culture, religion, etc. Similarly, it is not allowed to generate pornographic, violent and bloody content generation. The model is meant for research purposes.
+                    </p>
+                    <p>
+                        To learn more about the model, head to its <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.
+                    </p>
+                   </div>
+                """
+            )
+
 demo.queue(api_open=False, max_size=15).launch()
