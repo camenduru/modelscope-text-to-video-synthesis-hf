@@ -15,9 +15,11 @@ from huggingface_hub import snapshot_download
 if os.getenv('SYSTEM') == 'spaces':
     subprocess.run(shlex.split('pip uninstall -y modelscope'))
     subprocess.run(
-        shlex.split(
-            'pip install git+https://github.com/modelscope/modelscope@fe67395')
-    )
+        shlex.split('git clone https://github.com/modelscope/modelscope'),
+        cwd='/tmp',
+        env={'GIT_LFS_SKIP_SMUDGE': '1'})
+    subprocess.run(shlex.split('git checkout fe67395'), cwd='/tmp/modelscope')
+    subprocess.run(shlex.split('pip install .'), cwd='/tmp/modelscope')
 
 from modelscope.outputs import OutputKeys
 from modelscope.pipelines import pipeline
