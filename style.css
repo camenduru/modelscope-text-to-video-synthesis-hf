@@ -183,3 +183,9 @@ input[type='range'] {
     width: 100px;
     left: 50px
 }
+
+#component-0 {
+    max-width: 730px;
+    margin: auto;
+    padding-top: 1.5rem;
+}
