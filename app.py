@@ -32,7 +32,7 @@ if not model_dir.exists():
                       local_dir=model_dir)
 
 DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
-DESCRIPTION += '\n<p>For Colab usage, you can view <a href="https://colab.research.google.com/drive/1uW1ZqswkQ9Z9bp5Nbo5z59cAn7I0hE6R?usp=sharing" style="text-decoration: underline;" target="_blank">this webpage</a>.</p>'
+DESCRIPTION += '\n<p>For Colab usage, you can view <a href="https://colab.research.google.com/drive/1uW1ZqswkQ9Z9bp5Nbo5z59cAn7I0hE6R?usp=sharing" style="text-decoration: underline;" target="_blank">this webpage</a>.（the latest update on 2023.03.21）</p>'
 DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. To learn more about the model, take a look at the <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.</p>'
 if (SPACE_ID := os.getenv('SPACE_ID')) is not None:
     DESCRIPTION += f'\n<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings. <a href="https://huggingface.co/spaces/{SPACE_ID}?duplicate=true"><img style="display: inline; margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space" /></a></p>'
