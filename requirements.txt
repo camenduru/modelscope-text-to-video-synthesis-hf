@@ -1,6 +1,8 @@
-decord==0.6.0
-fairseq==0.12.2
-gradio==3.22.1
-huggingface-hub==0.13.2
-modelscope[multi-modal]==1.4.1
-open_clip_torch==2.16.0
+accelerate==0.17.1
+git+https://github.com/huggingface/diffusers@9dc8444
+gradio==3.23.0
+huggingface-hub==0.13.3
+imageio[ffmpeg]==2.26.1
+torch==2.0.0
+torchvision==0.15.1
+transformers==4.27.2

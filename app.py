@@ -3,33 +3,14 @@
 from __future__ import annotations
 
 import os
-import pathlib
 import random
-import shlex
-import subprocess
+import tempfile
 
 import gradio as gr
+import imageio
+import numpy as np
 import torch
-from huggingface_hub import snapshot_download
-
-if os.getenv('SYSTEM') == 'spaces':
-    subprocess.run(shlex.split('pip uninstall -y modelscope'))
-    subprocess.run(
-        shlex.split('git clone https://github.com/modelscope/modelscope'),
-        cwd='/tmp',
-        env={'GIT_LFS_SKIP_SMUDGE': '1'})
-    subprocess.run(shlex.split('git checkout fe67395'), cwd='/tmp/modelscope')
-    subprocess.run(shlex.split('pip install .'), cwd='/tmp/modelscope')
-
-from modelscope.outputs import OutputKeys
-from modelscope.pipelines import pipeline
-
-model_dir = pathlib.Path('weights')
-if not model_dir.exists():
-    model_dir.mkdir()
-    snapshot_download('damo-vilab/modelscope-damo-text-to-video-synthesis',
-                      repo_type='model',
-                      local_dir=model_dir)
+from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 
 DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
 DESCRIPTION += '\n<p>For Colab usage, you can view <a href="https://colab.research.google.com/drive/1uW1ZqswkQ9Z9bp5Nbo5z59cAn7I0hE6R?usp=sharing" style="text-decoration: underline;" target="_blank">this webpage</a>.（the latest update on 2023.03.21）</p>'
@@ -37,20 +18,43 @@ DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. To
 if (SPACE_ID := os.getenv('SPACE_ID')) is not None:
     DESCRIPTION += f'\n<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings. <a href="https://huggingface.co/spaces/{SPACE_ID}?duplicate=true"><img style="display: inline; margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space" /></a></p>'
 
-pipe = pipeline('text-to-video-synthesis', model_dir.as_posix())
+MAX_NUM_FRAMES = int(os.getenv('MAX_NUM_FRAMES', '200'))
+DEFAULT_NUM_FRAMES = min(MAX_NUM_FRAMES,
+                         int(os.getenv('DEFAULT_NUM_FRAMES', '16')))
+
+pipe = DiffusionPipeline.from_pretrained('damo-vilab/text-to-video-ms-1.7b',
+                                         torch_dtype=torch.float16,
+                                         variant='fp16')
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+pipe.enable_model_cpu_offload()
+pipe.enable_vae_slicing()
 
 
-def generate(prompt: str, seed: int) -> str:
+def to_video(frames: list[np.ndarray], fps: int) -> str:
+    out_file = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
+    writer = imageio.get_writer(out_file.name, format='FFMPEG', fps=fps)
+    for frame in frames:
+        writer.append_data(frame)
+    writer.close()
+    return out_file.name
+
+
+def generate(prompt: str, seed: int, num_frames: int,
+             num_inference_steps: int) -> str:
     if seed == -1:
         seed = random.randint(0, 1000000)
-    torch.manual_seed(seed)
-    return pipe({'text': prompt})[OutputKeys.OUTPUT_VIDEO]
+    generator = torch.Generator().manual_seed(seed)
+    frames = pipe(prompt,
+                  num_inference_steps=num_inference_steps,
+                  num_frames=num_frames,
+                  generator=generator).frames
+    return to_video(frames, 8)
 
 
 examples = [
-    ['An astronaut riding a horse.', 0],
-    ['A panda eating bamboo on a rock.', 0],
-    ['Spiderman is surfing.', 0],
+    ['An astronaut riding a horse.', 0, 16, 25],
+    ['A panda eating bamboo on a rock.', 0, 16, 25],
+    ['Spiderman is surfing.', 0, 16, 25],
 ]
 
 with gr.Blocks(css='style.css') as demo:
@@ -75,8 +79,27 @@ with gr.Blocks(css='style.css') as demo:
                 step=1,
                 value=-1,
                 info='If set to -1, a different seed will be used each time.')
+            num_frames = gr.Slider(
+                label='Number of frames',
+                minimum=16,
+                maximum=MAX_NUM_FRAMES,
+                step=1,
+                value=16,
+                info=
+                'Note that the content of the video also changes when you change the number of frames.'
+            )
+            num_inference_steps = gr.Slider(label='Number of inference steps',
+                                            minimum=10,
+                                            maximum=50,
+                                            step=1,
+                                            value=25)
 
-    inputs = [prompt, seed]
+    inputs = [
+        prompt,
+        seed,
+        num_frames,
+        num_inference_steps,
+    ]
     gr.Examples(examples=examples,
                 inputs=inputs,
                 outputs=result,
