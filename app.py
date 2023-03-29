@@ -109,6 +109,15 @@ with gr.Blocks(css='style.css') as demo:
     prompt.submit(fn=generate, inputs=inputs, outputs=result)
     run_button.click(fn=generate, inputs=inputs, outputs=result)
 
+
+    with gr.Accordion(label='We are hiring(Based in Beijing / Hangzhou, China.)', open=False):
+        gr.HTML("""<div class="acknowledgments">
+                    <p>
+                        If you're looking for an exciting challenge and the opportunity to work with cutting-edge technologies in AIGC and large-scale pretraining, then we are the place for you. We are looking for talented, motivated and creative individuals to join our team. If you are interested, please send your CV to us. <b>EMAIL: yingya.zyy@alibaba-inc.com</b>.
+                    </p>
+                   </div>
+                """)
+    
     with gr.Accordion(label='Biases and content acknowledgment', open=False):
         gr.HTML("""<div class="acknowledgments">
                     <h4>Biases and content acknowledgment</h4>
@@ -124,4 +133,5 @@ with gr.Blocks(css='style.css') as demo:
                    </div>
                 """)
 
+        
 demo.queue(api_open=False, max_size=15).launch()
