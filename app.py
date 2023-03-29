@@ -113,7 +113,10 @@ with gr.Blocks(css='style.css') as demo:
     with gr.Accordion(label='We are hiring(Based in Beijing / Hangzhou, China.)', open=False):
         gr.HTML("""<div class="acknowledgments">
                     <p>
-                        If you're looking for an exciting challenge and the opportunity to work with cutting-edge technologies in AIGC and large-scale pretraining, then we are the place for you. We are looking for talented, motivated and creative individuals to join our team. If you are interested, please send your CV to us. <b>EMAIL: yingya.zyy@alibaba-inc.com</b>.
+                        If you're looking for an exciting challenge and the opportunity to work with cutting-edge technologies in AIGC and large-scale pretraining, then we are the place for you. We are looking for talented, motivated and creative individuals to join our team. If you are interested, please send your CV to us.
+                    </p>
+                    <p>
+                        <b>EMAIL: yingya.zyy@alibaba-inc.com</b>.
                     </p>
                    </div>
                 """)
