@@ -13,7 +13,6 @@ import torch
 from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 
 DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
-DESCRIPTION += '\n<p>For Colab usage, you can view <a href="https://colab.research.google.com/drive/1uW1ZqswkQ9Z9bp5Nbo5z59cAn7I0hE6R?usp=sharing" style="text-decoration: underline;" target="_blank">this webpage</a>.（the latest update on 2023.03.21）</p>'
 DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. To learn more about the model, take a look at the <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.</p>'
 
 MAX_NUM_FRAMES = int(os.getenv('MAX_NUM_FRAMES', '200'))
@@ -106,18 +105,6 @@ with gr.Blocks(css='style.css') as demo:
 
     prompt.submit(fn=generate, inputs=inputs, outputs=result)
     run_button.click(fn=generate, inputs=inputs, outputs=result)
-
-
-    with gr.Accordion(label='We are hiring(Based in Beijing / Hangzhou, China.)', open=False):
-        gr.HTML("""<div class="acknowledgments">
-                    <p>
-                        If you're looking for an exciting challenge and the opportunity to work with cutting-edge technologies in AIGC and large-scale pretraining, then we are the place for you. We are looking for talented, motivated and creative individuals to join our team. If you are interested, please send your CV to us.
-                    </p>
-                    <p>
-                        <b>EMAIL: yingya.zyy@alibaba-inc.com</b>.
-                    </p>
-                   </div>
-                """)
     
     with gr.Accordion(label='Biases and content acknowledgment', open=False):
         gr.HTML("""<div class="acknowledgments">
