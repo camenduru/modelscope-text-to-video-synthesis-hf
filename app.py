@@ -40,7 +40,6 @@ def generate(prompt: str, seed: int, num_frames: int,
     return to_video(frames, 8)
 
 with gr.Blocks(css='style.css') as demo:
-    gr.Markdown(DESCRIPTION)
     with gr.Group():
         with gr.Box():
             with gr.Row(elem_id='prompt-container').style(equal_height=True):
