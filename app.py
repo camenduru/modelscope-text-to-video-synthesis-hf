@@ -13,7 +13,7 @@ import torch
 from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 
 DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
-DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. To learn more about the model, take a look at the <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.</p>'
+DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.</p>'
 
 MAX_NUM_FRAMES = int(os.getenv('MAX_NUM_FRAMES', '200'))
 DEFAULT_NUM_FRAMES = min(MAX_NUM_FRAMES,
