@@ -13,14 +13,12 @@ import torch
 from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 
 MAX_NUM_FRAMES = int(os.getenv('MAX_NUM_FRAMES', '200'))
-DEFAULT_NUM_FRAMES = min(MAX_NUM_FRAMES,
-                         int(os.getenv('DEFAULT_NUM_FRAMES', '16')))
+DEFAULT_NUM_FRAMES = min(MAX_NUM_FRAMES, int(os.getenv('DEFAULT_NUM_FRAMES', '16')))
 
 pipe = DiffusionPipeline.from_pretrained('vdo/text-to-video-ms-1.7b', torch_dtype=torch.float16, variant='fp16', safety_checker=None)
 pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 pipe.enable_model_cpu_offload()
 pipe.enable_vae_slicing()
-
 
 def to_video(frames: list[np.ndarray], fps: int) -> str:
     out_file = tempfile.NamedTemporaryFile(suffix='.mp4', delete=False)
@@ -29,7 +27,6 @@ def to_video(frames: list[np.ndarray], fps: int) -> str:
         writer.append_data(frame)
     writer.close()
     return out_file.name
-
 
 def generate(prompt: str, seed: int, num_frames: int,
              num_inference_steps: int) -> str:
