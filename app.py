@@ -15,8 +15,6 @@ from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
 DESCRIPTION += '\n<p>For Colab usage, you can view <a href="https://colab.research.google.com/drive/1uW1ZqswkQ9Z9bp5Nbo5z59cAn7I0hE6R?usp=sharing" style="text-decoration: underline;" target="_blank">this webpage</a>.（the latest update on 2023.03.21）</p>'
 DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. To learn more about the model, take a look at the <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.</p>'
-if (SPACE_ID := os.getenv('SPACE_ID')) is not None:
-    DESCRIPTION += f'\n<p>For faster inference without waiting in queue, you may duplicate the space and upgrade to GPU in settings. <a href="https://huggingface.co/spaces/{SPACE_ID}?duplicate=true"><img style="display: inline; margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space" /></a></p>'
 
 MAX_NUM_FRAMES = int(os.getenv('MAX_NUM_FRAMES', '200'))
 DEFAULT_NUM_FRAMES = min(MAX_NUM_FRAMES,
@@ -137,4 +135,4 @@ with gr.Blocks(css='style.css') as demo:
                 """)
 
         
-demo.queue(api_open=False, max_size=15).launch()
+demo.queue(api_open=False, max_size=15).launch(share=True)
