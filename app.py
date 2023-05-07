@@ -12,9 +12,6 @@ import numpy as np
 import torch
 from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 
-DESCRIPTION = '# [ModelScope Text to Video Synthesis](https://modelscope.cn/models/damo/text-to-video-synthesis/summary)'
-DESCRIPTION += '\n<p>This model can only be used for non-commercial purposes. <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.</p>'
-
 MAX_NUM_FRAMES = int(os.getenv('MAX_NUM_FRAMES', '200'))
 DEFAULT_NUM_FRAMES = min(MAX_NUM_FRAMES,
                          int(os.getenv('DEFAULT_NUM_FRAMES', '16')))
@@ -44,13 +41,6 @@ def generate(prompt: str, seed: int, num_frames: int,
                   num_frames=num_frames,
                   generator=generator).frames
     return to_video(frames, 8)
-
-
-examples = [
-    ['An astronaut riding a horse.', 0, 16, 25],
-    ['A panda eating bamboo on a rock.', 0, 16, 25],
-    ['Spiderman is surfing.', 0, 16, 25],
-]
 
 with gr.Blocks(css='style.css') as demo:
     gr.Markdown(DESCRIPTION)
@@ -95,29 +85,8 @@ with gr.Blocks(css='style.css') as demo:
         num_frames,
         num_inference_steps,
     ]
-    gr.Examples(examples=examples,
-                inputs=inputs,
-                outputs=result,
-                fn=generate,
-                cache_examples=os.getenv('SYSTEM') == 'spaces')
 
     prompt.submit(fn=generate, inputs=inputs, outputs=result)
     run_button.click(fn=generate, inputs=inputs, outputs=result)
-    
-    with gr.Accordion(label='Biases and content acknowledgment', open=False):
-        gr.HTML("""<div class="acknowledgments">
-                    <h4>Biases and content acknowledgment</h4>
-                    <p>
-                        Despite how impressive being able to turn text into video is, beware to the fact that this model may output content that reinforces or exacerbates societal biases. The training data includes LAION5B, ImageNet, Webvid and other public datasets. The model was not trained to realistically represent people or events, so using it to generate such content is beyond the model's capabilities.
-                    </p>
-                    <p>
-                        It is not intended to generate content that is demeaning or harmful to people or their environment, culture, religion, etc. Similarly, it is not allowed to generate pornographic, violent and bloody content generation. <b>The model is meant for research purposes</b>.
-                    </p>
-                    <p>
-                        To learn more about the model, head to its <a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" style="text-decoration: underline;" target="_blank">model card</a>.
-                    </p>
-                   </div>
-                """)
 
-        
 demo.queue(api_open=False, max_size=15).launch(share=True)
